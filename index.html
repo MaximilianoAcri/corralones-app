@@ -84,26 +84,7 @@
         }
 
         .filtro-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 15px;
-            background: #fff3e0;
-            border: 2px solid #ff9800;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            white-space: nowrap;
-        }
-
-        .filtro-checkbox input {
-            width: 20px;
-            height: 20px;
-        }
-
-        .filtro-checkbox.active {
-            background: #ff9800;
-            color: white;
+            display: none;
         }
 
         .stats {
@@ -335,16 +316,6 @@
         <select class="filtro-select" id="filtroZona">
             <option value="Todos">Todas las zonas</option>
         </select>
-        
-        <label class="filtro-checkbox" id="soloPendientesLabel">
-            <input type="checkbox" id="soloPendientes">
-            <span>🔔 Solo pendientes</span>
-        </label>
-
-        <label class="filtro-checkbox" id="soloFavoritosLabel">
-            <input type="checkbox" id="soloFavoritos">
-            <span>⭐ Favoritos</span>
-        </label>
     </div>
 
     <div class="stats" id="stats"></div>
@@ -548,21 +519,12 @@
 
         let zonas = ["Todos"];
         let zonaActual = "Todos";
-        let soloPendientes = false;
-        let soloFavoritos = false;
-        // Estados: { whatsapp: bool, llamado: bool, favorito: bool }
         let estados = {};
-        let indiceActual = 0;
 
         function init() {
             zonas = ["Todos", ...new Set(corralones.map(c => c.zona))];
             const guardados = localStorage.getItem('estados');
             if (guardados) estados = JSON.parse(guardados);
-            
-            // Cargar checkboxes
-            soloPendientes = localStorage.getItem('soloPendientes') === 'true';
-            soloFavoritos = localStorage.getItem('soloFavoritos') === 'true';
-            
             render();
         }
 
@@ -668,7 +630,6 @@
         }
 
         function render() {
-            // Render filtro zona
             const filtroEl = document.getElementById('filtroZona');
             if (filtroEl.options.length === 1) {
                 zonas.forEach(z => {
@@ -684,52 +645,10 @@
             }
             filtroEl.value = zonaActual;
 
-            // Checkboxes
-            const soloPendientesEl = document.getElementById('soloPendientes');
-            const soloFavoritosEl = document.getElementById('soloFavoritos');
-            const soloPendientesLabel = document.getElementById('soloPendientesLabel');
-            const soloFavoritosLabel = document.getElementById('soloFavoritosLabel');
-            
-            soloPendientesEl.checked = soloPendientes;
-            soloFavoritosEl.checked = soloFavoritos;
-            
-            if (soloPendientes) soloPendientesLabel.classList.add('active');
-            else soloPendientesLabel.classList.remove('active');
-            
-            if (soloFavoritos) soloFavoritosLabel.classList.add('active');
-            else soloFavoritosLabel.classList.remove('active');
-            
-            soloPendientesEl.addEventListener('change', (e) => {
-                soloPendientes = e.target.checked;
-                localStorage.setItem('soloPendientes', soloPendientes);
-                render();
-            });
-            
-            soloFavoritosEl.addEventListener('change', (e) => {
-                soloFavoritos = e.target.checked;
-                localStorage.setItem('soloFavoritos', soloFavoritos);
-                render();
-            });
-
-            // Filtrar
             let filtrados = corralones.map((c, i) => ({ c, i }));
             
             if (zonaActual !== "Todos") {
                 filtrados = filtrados.filter(x => x.c.zona === zonaActual);
-            }
-            
-            if (soloPendientes) {
-                filtrados = filtrados.filter(x => {
-                    const e = estados[x.i] || {};
-                    return !e.whatsapp && !e.llamado;
-                });
-            }
-            
-            if (soloFavoritos) {
-                filtrados = filtrados.filter(x => {
-                    const e = estados[x.i] || {};
-                    return e.favorito;
-                });
             }
 
             // Progreso
@@ -751,7 +670,7 @@
             });
             
             document.getElementById('stats').innerHTML = `
-                <strong>🔔 ${pendientes.length} pendientes</strong> en esta zona
+                <strong>${filtrados.length} corralones</strong> en esta zona
             `;
 
             // Lista
