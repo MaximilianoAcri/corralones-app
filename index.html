@@ -12,7 +12,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f0f0f0;
-            padding-bottom: 30px;
+            padding-bottom: 120px;
         }
 
         header {
@@ -30,32 +30,80 @@
             margin-bottom: 5px;
         }
 
-        .filtro-container {
+        .progreso-container {
+            padding: 15px;
+            background: white;
+        }
+
+        .progreso-texto {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .progreso-barra {
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .progreso-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .filtros-container {
             padding: 15px;
             background: white;
             border-bottom: 1px solid #ddd;
-        }
-
-        .filtro-label {
-            font-size: 1rem;
-            color: #666;
-            margin-bottom: 10px;
-            display: block;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .filtro-select {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.1rem;
+            flex: 1;
+            min-width: 150px;
+            padding: 12px;
+            font-size: 1rem;
             border: 2px solid #ddd;
             border-radius: 10px;
             background: white;
             cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2'%3E%3Cpolyline points='6,9 12,15 18,9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 20px;
+        }
+
+        .filtro-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 15px;
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .filtro-checkbox input {
+            width: 20px;
+            height: 20px;
+        }
+
+        .filtro-checkbox.active {
+            background: #ff9800;
+            color: white;
         }
 
         .stats {
@@ -64,14 +112,6 @@
             text-align: center;
             font-size: 1.1rem;
             color: #2e7d32;
-            font-weight: bold;
-        }
-
-        .stats-row {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
         }
 
         .lista {
@@ -92,8 +132,14 @@
             background: #e8f5e9;
         }
 
-        .card.llamado {
-            border-left: 5px solid #1976d2;
+        .card.favorito {
+            border: 3px solid #ffc107;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
         }
 
         .nombre {
@@ -101,6 +147,15 @@
             font-weight: bold;
             color: #333;
             margin-bottom: 8px;
+            flex: 1;
+        }
+
+        .favorito-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
         }
 
         .zona {
@@ -124,10 +179,6 @@
             display: flex;
             align-items: center;
             gap: 5px;
-        }
-
-        .direccion a:hover {
-            text-decoration: underline;
         }
 
         .botones {
@@ -180,16 +231,16 @@
         }
 
         .badge {
-            padding: 12px 18px;
+            padding: 10px 15px;
             border-radius: 25px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: all 0.2s;
-            border: 3px solid transparent;
+            border: 2px solid transparent;
         }
 
         .badge:active {
@@ -220,16 +271,48 @@
             border-color: #1976d2;
         }
 
-        .reset-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 15px 30px;
+        .siguiente-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 120px;
             background: #ff9800;
             color: white;
             border: none;
-            border-radius: 25px;
-            font-size: 1.1rem;
+            border-radius: 30px;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.5);
+            z-index: 100;
+        }
+
+        .reset-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #9e9e9e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+
+        .sin-resultados {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .sin-resultados h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -238,16 +321,40 @@
         <h1>🏪 Corralones</h1>
     </header>
 
-    <div class="filtro-container">
-        <label class="filtro-label">📍 Filtrar por zona:</label>
+    <div class="progreso-container">
+        <div class="progreso-texto">
+            <span>📊 Progreso</span>
+            <span id="progreso-numero">0 de 0</span>
+        </div>
+        <div class="progreso-barra">
+            <div class="progreso-fill" id="progreso-fill" style="width: 0%">0%</div>
+        </div>
+    </div>
+
+    <div class="filtros-container">
         <select class="filtro-select" id="filtroZona">
             <option value="Todos">Todas las zonas</option>
         </select>
+        
+        <label class="filtro-checkbox" id="soloPendientesLabel">
+            <input type="checkbox" id="soloPendientes">
+            <span>🔔 Solo pendientes</span>
+        </label>
+
+        <label class="filtro-checkbox" id="soloFavoritosLabel">
+            <input type="checkbox" id="soloFavoritos">
+            <span>⭐ Favoritos</span>
+        </label>
     </div>
 
     <div class="stats" id="stats"></div>
     <div class="lista" id="lista"></div>
-    <button class="reset-btn" onclick="resetAll()">🔄 Reiniciar todo</button>
+
+    <button class="siguiente-btn" id="btnSiguiente" onclick="irSiguiente()">
+        ▶️ Siguiente pendiente
+    </button>
+    
+    <button class="reset-btn" onclick="resetAll()" title="Reiniciar">↺</button>
 
     <script>
         const corralones = [
@@ -403,13 +510,21 @@
 
         let zonas = ["Todos"];
         let zonaActual = "Todos";
-        // Estados: { whatsapp: true/false, llamado: true/false }
+        let soloPendientes = false;
+        let soloFavoritos = false;
+        // Estados: { whatsapp: bool, llamado: bool, favorito: bool }
         let estados = {};
+        let indiceActual = 0;
 
         function init() {
             zonas = ["Todos", ...new Set(corralones.map(c => c.zona))];
             const guardados = localStorage.getItem('estados');
             if (guardados) estados = JSON.parse(guardados);
+            
+            // Cargar checkboxes
+            soloPendientes = localStorage.getItem('soloPendientes') === 'true';
+            soloFavoritos = localStorage.getItem('soloFavoritos') === 'true';
+            
             render();
         }
 
@@ -429,6 +544,41 @@
             estados[index].llamado = !estados[index].llamado;
             guardar();
             render();
+        }
+
+        function toggleFavorito(index) {
+            if (!estados[index]) estados[index] = {};
+            estados[index].favorito = !estados[index].favorito;
+            guardar();
+            render();
+        }
+
+        function irSiguiente() {
+            const pendientes = getPendientes();
+            if (pendientes.length === 0) {
+                alert('¡Felicidades! Ya contactaste a todos.');
+                return;
+            }
+            
+            // Encontrar el primer pendiente
+            const primero = pendientes[0];
+            const elemento = document.querySelector(`[data-index="${primero}"]`);
+            if (elemento) {
+                elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                elemento.style.backgroundColor = '#fff3cd';
+                setTimeout(() => elemento.style.backgroundColor = '', 1000);
+            }
+        }
+
+        function getPendientes() {
+            let pendientes = [];
+            corralones.forEach((c, i) => {
+                const e = estados[i] || {};
+                if (!e.whatsapp && !e.llamado) {
+                    pendientes.push(i);
+                }
+            });
+            return pendientes;
         }
 
         function resetAll() {
@@ -480,6 +630,7 @@
         }
 
         function render() {
+            // Render filtro zona
             const filtroEl = document.getElementById('filtroZona');
             if (filtroEl.options.length === 1) {
                 zonas.forEach(z => {
@@ -488,41 +639,108 @@
                     opt.textContent = z;
                     filtroEl.appendChild(opt);
                 });
-                filtroEl.value = zonaActual;
                 filtroEl.addEventListener('change', (e) => {
                     zonaActual = e.target.value;
                     render();
                 });
             }
+            filtroEl.value = zonaActual;
 
-            const filtrados = zonaActual === "Todos" ? corralones : corralones.filter(c => c.zona === zonaActual);
+            // Checkboxes
+            const soloPendientesEl = document.getElementById('soloPendientes');
+            const soloFavoritosEl = document.getElementById('soloFavoritos');
+            const soloPendientesLabel = document.getElementById('soloPendientesLabel');
+            const soloFavoritosLabel = document.getElementById('soloFavoritosLabel');
             
-            // Contar estados
-            let totalWhatsapp = 0;
-            let totalLlamado = 0;
-            Object.keys(estados).forEach(k => {
-                if (estados[k].whatsapp) totalWhatsapp++;
-                if (estados[k].llamado) totalLlamado++;
+            soloPendientesEl.checked = soloPendientes;
+            soloFavoritosEl.checked = soloFavoritos;
+            
+            if (soloPendientes) soloPendientesLabel.classList.add('active');
+            else soloPendientesLabel.classList.remove('active');
+            
+            if (soloFavoritos) soloFavoritosLabel.classList.add('active');
+            else soloFavoritosLabel.classList.remove('active');
+            
+            soloPendientesEl.addEventListener('change', (e) => {
+                soloPendientes = e.target.checked;
+                localStorage.setItem('soloPendientes', soloPendientes);
+                render();
             });
             
-            const statsEl = document.getElementById('stats');
-            statsEl.innerHTML = `
-                <div class="stats-row">
-                    <span>💬 Contactados: <span>${totalWhatsapp}</span></span>
-                    <span>📞 Llamados: <span>${totalLlamado}</span></span>
-                    <span>📍 Total: <span>${corralones.length}</span></span>
-                </div>
+            soloFavoritosEl.addEventListener('change', (e) => {
+                soloFavoritos = e.target.checked;
+                localStorage.setItem('soloFavoritos', soloFavoritos);
+                render();
+            });
+
+            // Filtrar
+            let filtrados = corralones.map((c, i) => ({ c, i }));
+            
+            if (zonaActual !== "Todos") {
+                filtrados = filtrados.filter(x => x.c.zona === zonaActual);
+            }
+            
+            if (soloPendientes) {
+                filtrados = filtrados.filter(x => {
+                    const e = estados[x.i] || {};
+                    return !e.whatsapp && !e.llamado;
+                });
+            }
+            
+            if (soloFavoritos) {
+                filtrados = filtrados.filter(x => {
+                    const e = estados[x.i] || {};
+                    return e.favorito;
+                });
+            }
+
+            // Progreso
+            const total = corralones.length;
+            let contactados = 0;
+            Object.keys(estados).forEach(k => {
+                if (estados[k].whatsapp || estados[k].llamado) contactados++;
+            });
+            const porcentaje = Math.round((contactados / total) * 100);
+            
+            document.getElementById('progreso-numero').textContent = `${contactados} de ${total}`;
+            document.getElementById('progreso-fill').style.width = `${porcentaje}%`;
+            document.getElementById('progreso-fill').textContent = `${porcentaje}%`;
+
+            // Stats
+            const pendientes = getPendientes().filter(i => {
+                if (zonaActual !== "Todos") return corralones[i].zona === zonaActual;
+                return true;
+            });
+            
+            document.getElementById('stats').innerHTML = `
+                <strong>🔔 ${pendientes.length} pendientes</strong> en esta zona
             `;
 
+            // Lista
             const listaEl = document.getElementById('lista');
-            listaEl.innerHTML = filtrados.map((c, pos) => {
-                const index = corralones.indexOf(c);
-                const estado = estados[index] || {};
-                const cardClass = (estado.whatsapp || estado.llamado) ? 'card' : 'card';
+            
+            if (filtrados.length === 0) {
+                listaEl.innerHTML = `
+                    <div class="sin-resultados">
+                        <h3>🔍 Sin resultados</h3>
+                        <p>No hay corralones que mostrar con los filtros actuales.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listaEl.innerHTML = filtrados.map(({ c, i }) => {
+                const estado = estados[i] || {};
+                const esFavorito = estado.favorito;
                 
                 return `
-                <div class="${cardClass}">
-                    <div class="nombre">${c.nombre}</div>
+                <div class="card ${(estado.whatsapp || estado.llamado) ? 'contactado' : ''} ${esFavorito ? 'favorito' : ''}" data-index="${i}">
+                    <div class="card-header">
+                        <div class="nombre">${c.nombre}</div>
+                        <button class="favorito-btn" onclick="toggleFavorito(${i})">
+                            ${esFavorito ? '⭐' : '☆'}
+                        </button>
+                    </div>
                     <div class="zona">📍 ${c.zona}</div>
                     
                     ${c.direccion ? `
@@ -534,19 +752,19 @@
                     ` : ''}
                     
                     <div class="botones">
-                        <a class="boton boton-whatsapp" href="#" onclick="contactarWhatsApp(${index});return false;">
+                        <a class="boton boton-whatsapp" href="#" onclick="contactarWhatsApp(${i});return false;">
                             💬 WhatsApp
                         </a>
-                        <a class="boton boton-llamar" href="#" onclick="llamar(${index});return false;">
+                        <a class="boton boton-llamar" href="#" onclick="llamar(${i});return false;">
                             📞 Llamar
                         </a>
                     </div>
                     
                     <div class="badges">
-                        <div class="badge badge-whatsapp ${estado.whatsapp ? 'active' : ''}" onclick="toggleWhatsApp(${index})">
+                        <div class="badge badge-whatsapp ${estado.whatsapp ? 'active' : ''}" onclick="toggleWhatsApp(${i})">
                             ${estado.whatsapp ? '✓ ' : ''}💬 WhatsApp
                         </div>
-                        <div class="badge badge-llamar ${estado.llamado ? 'active' : ''}" onclick="toggleLlamar(${index})">
+                        <div class="badge badge-llamar ${estado.llamado ? 'active' : ''}" onclick="toggleLlamar(${i})">
                             ${estado.llamado ? '✓ ' : ''}📞 Llamado
                         </div>
                     </div>
