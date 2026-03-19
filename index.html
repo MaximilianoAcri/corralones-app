@@ -18,7 +18,7 @@
         header {
             background: #25D366;
             color: white;
-            padding: 25px 20px;
+            padding: 20px;
             text-align: center;
             position: sticky;
             top: 0;
@@ -26,43 +26,40 @@
         }
 
         header h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin-bottom: 5px;
         }
 
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .filtros {
-            padding: 15px 10px;
+        .filtro-container {
+            padding: 15px;
             background: white;
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
             border-bottom: 1px solid #ddd;
         }
 
-        .filtros::-webkit-scrollbar { display: none; }
-
-        .filtro-btn {
-            padding: 14px 18px;
-            border: 2px solid #ddd;
-            border-radius: 25px;
-            background: white;
+        .filtro-label {
             font-size: 1rem;
-            cursor: pointer;
-            white-space: nowrap;
-            min-width: fit-content;
+            color: #666;
+            margin-bottom: 10px;
+            display: block;
         }
 
-        .filtro-btn.active {
-            background: #25D366;
-            color: white;
+        .filtro-select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2'%3E%3Cpolyline points='6,9 12,15 18,9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+        }
+
+        .filtro-select:focus {
+            outline: none;
             border-color: #25D366;
         }
 
@@ -70,7 +67,7 @@
             padding: 15px;
             background: #e8f5e9;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #2e7d32;
             font-weight: bold;
         }
@@ -80,14 +77,12 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            max-width: 600px;
-            margin: 0 auto;
         }
 
         .card {
             background: white;
             border-radius: 15px;
-            padding: 20px;
+            padding: 18px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
@@ -97,7 +92,7 @@
         }
 
         .nombre {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: bold;
             color: #333;
             margin-bottom: 8px;
@@ -105,45 +100,82 @@
 
         .zona {
             color: #666;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .direccion {
+            color: #888;
+            font-size: 0.95rem;
             margin-bottom: 15px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .direccion a {
+            color: #1976d2;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .direccion a:hover {
+            text-decoration: underline;
+        }
+
+        .botones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .boton {
+            flex: 1;
+            min-width: 140px;
             display: block;
-            width: 100%;
-            background: #25D366;
-            color: white;
-            border: none;
+            padding: 18px 12px;
             border-radius: 12px;
-            padding: 22px;
-            font-size: 1.4rem;
+            font-size: 1rem;
             font-weight: bold;
             text-decoration: none;
             text-align: center;
             cursor: pointer;
+            border: none;
+        }
+
+        .boton-whatsapp {
+            background: #25D366;
+            color: white;
             box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
         }
 
-        .boton:active {
+        .boton-whatsapp:active {
             background: #20bd5a;
             transform: scale(0.98);
         }
 
-        .badge-contactado {
-            display: inline-block;
-            background: #4caf50;
+        .boton-llamar {
+            background: #1976d2;
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 1rem;
-            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(25, 118, 210, 0.4);
         }
 
-        .sin-telefono {
-            background: #999;
-            cursor: not-allowed;
-            box-shadow: none;
+        .boton-llamar:active {
+            background: #1565c0;
+            transform: scale(0.98);
+        }
+
+        .badge-contactado {
+            display: block;
+            background: #4caf50;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+            margin-top: 10px;
         }
 
         .reset-btn {
@@ -162,168 +194,169 @@
 <body>
     <header>
         <h1>🏪 Corralones</h1>
-        <p>Contactá por WhatsApp</p>
     </header>
 
-    <div class="filtros" id="filtros"></div>
+    <div class="filtro-container">
+        <label class="filtro-label">📍 Filtrar por zona:</label>
+        <select class="filtro-select" id="filtroZona">
+            <option value="Todos">Todas las zonas</option>
+        </select>
+    </div>
+
     <div class="stats" id="stats"></div>
     <div class="lista" id="lista"></div>
-    <button class="reset-btn" onclick="resetAll()">🔄 Reiniciar</button>
+    <button class="reset-btn" onclick="resetAll()">🔄 Reiniciar contactos</button>
 
     <script>
         const corralones = [
-            { nombre: "Corralón El Lider 2", zona: "Avellaneda", telefono: "011 3348-3980" },
-            { nombre: "Corralón Rossi Chico", zona: "Avellaneda", telefono: "011 3146-8283" },
-            { nombre: "Nuevo Travaglini", zona: "Avellaneda", telefono: "011 4549-2003" },
-            { nombre: "Corralón 2 de Abril", zona: "Belgrano", telefono: "0223 593-8651" },
-            { nombre: "Corralón Belgrano", zona: "Belgrano", telefono: "011 4220-6046" },
-            { nombre: "Red Sacchi", zona: "Belgrano", telefono: "011 2446-6681" },
-            { nombre: "Calera El Ombu", zona: "Benavídez", telefono: "0800-220-6628" },
-            { nombre: "Hiemar Benavídez", zona: "Benavídez", telefono: "011 2850-0943" },
-            { nombre: "Corralón Las Campanas", zona: "Campana", telefono: "03489 15-57-5959" },
-            { nombre: "Materiales Caseros", zona: "Caseros", telefono: "02320 49-1986" },
-            { nombre: "Rosmat Corralón", zona: "Caseros", telefono: "011 4759-9848" },
-            { nombre: "Materiales Del Viso", zona: "Del Viso", telefono: "02320 40-0548" },
-            { nombre: "Casa Guido", zona: "Don Torcuato", telefono: "011 4748-2806" },
-            { nombre: "Corralón Arcepi", zona: "Ensenada", telefono: "011 2087-2527" },
-            { nombre: "Corralón Tra-cor", zona: "Escobar", telefono: "011 6434-7028" },
-            { nombre: "Corralones del Norte", zona: "Escobar", telefono: "0348 464-1700" },
-            { nombre: "Corralón del Sur", zona: "Florencio Varela", telefono: "011 7513-0086" },
-            { nombre: "Corralón Florida Norte", zona: "Florida", telefono: "011 6671-2813" },
-            { nombre: "Corralón La Florida", zona: "Florida", telefono: "011 4769-1309" },
-            { nombre: "Abelson", zona: "GBA Norte", telefono: "011 4584-9400" },
-            { nombre: "Allmat Materiales", zona: "GBA Norte", telefono: "011 3816-6431" },
-            { nombre: "Andersen Materiales", zona: "GBA Norte", telefono: "0800-888-6161" },
-            { nombre: "Apolo Materiales", zona: "GBA Norte", telefono: "011 4442-0393" },
-            { nombre: "Aurora Materiales", zona: "GBA Norte", telefono: "011 4641-3428" },
-            { nombre: "Benamat Corralon", zona: "GBA Norte", telefono: "011 2634-9206" },
-            { nombre: "CASA ANAYAN", zona: "GBA Norte", telefono: "011 2529-3839" },
-            { nombre: "CASA FUSCO", zona: "GBA Norte", telefono: "02320 42-7555" },
-            { nombre: "CERÁMICA RÍO GRANDE", zona: "GBA Norte", telefono: "011 5001-6571" },
-            { nombre: "CORRALON EL CACIQUE", zona: "GBA Norte", telefono: "011 5596-2840" },
-            { nombre: "CORRALON LA BASE", zona: "GBA Norte", telefono: "011 5762-0431" },
-            { nombre: "CORRALON RICKY", zona: "GBA Norte", telefono: "011 3099-4899" },
-            { nombre: "CORRALÓN CASA NANCY", zona: "GBA Norte", telefono: "011 4669-6294" },
-            { nombre: "CORRALÓN EL TRIÁNGULO", zona: "GBA Norte", telefono: "011 5054-0111" },
-            { nombre: "Calera Larrazabal", zona: "GBA Norte", telefono: "011 6715-9205" },
-            { nombre: "Calera el Puente", zona: "GBA Norte", telefono: "0220 489-3734" },
-            { nombre: "Casa Bascioni", zona: "GBA Norte", telefono: "011 4743-3148" },
-            { nombre: "Casa Casares", zona: "GBA Norte", telefono: "011 4626-1038" },
-            { nombre: "Casa Casmma", zona: "GBA Norte", telefono: "011 4994-8696" },
-            { nombre: "Casa Cellilli", zona: "GBA Norte", telefono: "011 5893-0862" },
-            { nombre: "Casa Falcone", zona: "GBA Norte", telefono: "011 4743-5772" },
-            { nombre: "Casa Fernandes", zona: "GBA Norte", telefono: "011 2440-4204" },
-            { nombre: "Casa Pío XII", zona: "GBA Norte", telefono: "0237 462-4514" },
-            { nombre: "Casa Santa Rosa", zona: "GBA Norte", telefono: "011 4624-0073" },
-            { nombre: "Casa Scalise", zona: "GBA Norte", telefono: "011 5588-8239" },
-            { nombre: "Cerámica Cregar", zona: "GBA Norte", telefono: "011 4665-2338" },
-            { nombre: "Corral-On", zona: "GBA Norte", telefono: "011 2700-6912" },
-            { nombre: "Corralon El Sol", zona: "GBA Norte", telefono: "0220 499-8399" },
-            { nombre: "Corralon Casa Leo", zona: "GBA Norte", telefono: "011 5722-6388" },
-            { nombre: "Corralon Diego", zona: "GBA Norte", telefono: "011 6002-0819" },
-            { nombre: "Corralon El Economico", zona: "GBA Norte", telefono: "011 4664-1067" },
-            { nombre: "Corralon Mariano", zona: "GBA Norte", telefono: "011 5249-7820" },
-            { nombre: "Corralon Rossi EL TUNEL", zona: "GBA Norte", telefono: "011 2248-0809" },
-            { nombre: "Corralon Santa Brigida", zona: "GBA Norte", telefono: "011 3632-7522" },
-            { nombre: "Corralon Santa Rosa", zona: "GBA Norte", telefono: "011 2586-6279" },
-            { nombre: "Corralon San Cayetano", zona: "GBA Norte", telefono: "011 5261-8790" },
-            { nombre: "Corralón ABCÉ", zona: "GBA Norte", telefono: "011 2421-8345" },
-            { nombre: "Corralón Arielito", zona: "GBA Norte", telefono: "011 5431-9945" },
-            { nombre: "Corralón COCEVI", zona: "GBA Norte", telefono: "011 5433-9066" },
-            { nombre: "Corralón Ciudadela", zona: "GBA Norte", telefono: "011 4653-5333" },
-            { nombre: "Corralón Comaf", zona: "GBA Norte", telefono: "011 4747-8902" },
-            { nombre: "Corralón El Atalaya", zona: "GBA Norte", telefono: "011 4625-2012" },
-            { nombre: "Corralón El Fortín", zona: "GBA Norte", telefono: "02320 47-0560" },
-            { nombre: "Corralón El Ombú", zona: "GBA Norte", telefono: "011 5306-2836" },
-            { nombre: "Corralón El Pampa", zona: "GBA Norte", telefono: "011 3359-7777" },
-            { nombre: "Corralón El Sueño", zona: "GBA Norte", telefono: "011 4769-1073" },
-            { nombre: "Corralón Nueva Era", zona: "GBA Norte", telefono: "011 2552-1979" },
-            { nombre: "Corralón Visconti", zona: "GBA Norte", telefono: "011 5580-8870" },
-            { nombre: "DECORMAT", zona: "GBA Norte", telefono: "011 3234-1423" },
-            { nombre: "DURAMAT", zona: "GBA Norte", telefono: "011 2139-0000" },
-            { nombre: "El Prado", zona: "GBA Norte", telefono: "011 2743-9626" },
-            { nombre: "El Triunfo", zona: "GBA Norte", telefono: "011 4766-8950" },
-            { nombre: "FUNDACIÓN VIVIENDA DIGNA", zona: "GBA Norte", telefono: "0810-555-7863" },
-            { nombre: "Familia Bercomat", zona: "GBA Norte", telefono: "0800-555-23726" },
-            { nombre: "Los Primos", zona: "GBA Norte", telefono: "011 4457-2383" },
-            { nombre: "Maipú Materiales", zona: "GBA Norte", telefono: "011 4660-2737" },
-            { nombre: "Materiales 2003", zona: "GBA Norte", telefono: "011 7183-2003" },
-            { nombre: "Materiales Dorrego", zona: "GBA Norte", telefono: "0220 482-7316" },
-            { nombre: "Materiales Leloir", zona: "GBA Norte", telefono: "011 4621-1467" },
-            { nombre: "Materiales Nuciari", zona: "GBA Norte", telefono: "011 5263-9596" },
-            { nombre: "Nueva Casa Benavidez", zona: "GBA Norte", telefono: "0800-220-2272" },
-            { nombre: "Pignataro", zona: "GBA Norte", telefono: "011 4740-5177" },
-            { nombre: "Proyectar Materiales", zona: "GBA Norte", telefono: "011 2120-8444" },
-            { nombre: "San Luis Materiales", zona: "GBA Norte", telefono: "011 4844-3675" },
-            { nombre: "Calera Ferrari", zona: "GBA Oeste", telefono: "011 15-6622-1636" },
-            { nombre: "MATERIALES OESTE", zona: "GBA Oeste", telefono: "011 2506-8910" },
-            { nombre: "Maxi Corralon", zona: "GBA Oeste", telefono: "011 2277-1609" },
-            { nombre: "Zingtech", zona: "GBA Oeste", telefono: "011 6815-3517" },
-            { nombre: "Aliceri", zona: "GBA Sur", telefono: "011 2477-4270" },
-            { nombre: "Armando", zona: "GBA Sur", telefono: "0800-333-6734" },
-            { nombre: "CORRALON BRILL", zona: "GBA Sur", telefono: "011 4992-8550" },
-            { nombre: "CORRALON 222", zona: "GBA Sur", telefono: "011 4295-1205" },
-            { nombre: "CORRALÓN AMENEDO", zona: "GBA Sur", telefono: "011 4294-7414" },
-            { nombre: "CORRALÓN Los Tiempos", zona: "GBA Sur", telefono: "4299-7117" },
-            { nombre: "Casa Avenida", zona: "GBA Sur", telefono: "011 4283-0906" },
-            { nombre: "Cerámica Echeverria", zona: "GBA Sur", telefono: "011 4693-2800" },
-            { nombre: "Corralon Aquino", zona: "GBA Sur", telefono: "011 2805-7762" },
-            { nombre: "Corralon Arco Iris", zona: "GBA Sur", telefono: "011 4220-7061" },
-            { nombre: "Corralon El Amanecer", zona: "GBA Sur", telefono: "011 3141-9018" },
-            { nombre: "Corralon El Pelado", zona: "GBA Sur", telefono: "011 6016-4377" },
-            { nombre: "Corralon Espora", zona: "GBA Sur", telefono: "011 2444-5879" },
-            { nombre: "Corralon Kennedy", zona: "GBA Sur", telefono: "02229 44-0685" },
-            { nombre: "Corralon Las Palmas", zona: "GBA Sur", telefono: "011 6990-2962" },
-            { nombre: "Corralon Los Hermanos", zona: "GBA Sur", telefono: "011 4244-5301" },
-            { nombre: "Corralon Martinto", zona: "GBA Sur", telefono: "011 5660-5860" },
-            { nombre: "Corralon Megamat", zona: "GBA Sur", telefono: "011 15-7027-5677" },
-            { nombre: "Corralon Rodriguez", zona: "GBA Sur", telefono: "011 4298-4214" },
-            { nombre: "Corralon Santa Clara", zona: "GBA Sur", telefono: "011 2685-6451" },
-            { nombre: "Corralon Santoro", zona: "GBA Sur", telefono: "011 4216-0929" },
-            { nombre: "Corralón 80", zona: "GBA Sur", telefono: "011 3750-0824" },
-            { nombre: "Corralón Acomar", zona: "GBA Sur", telefono: "011 2564-4252" },
-            { nombre: "Corralón Cepeda", zona: "GBA Sur", telefono: "011 4278-1718" },
-            { nombre: "Corralón DIMACO", zona: "GBA Sur", telefono: "4282-0595" },
-            { nombre: "Corralón El Clásico", zona: "GBA Sur", telefono: "011 4998-2423" },
-            { nombre: "Corralón El Gauchito", zona: "GBA Sur", telefono: "011 4398-1445" },
-            { nombre: "Corralón El Vasco", zona: "GBA Sur", telefono: "011 4238-3552" },
-            { nombre: "Corralón Leo", zona: "GBA Sur", telefono: "011 4223-4682" },
-            { nombre: "Corralón Los 4 Hermanos", zona: "GBA Sur", telefono: "011 4249-2932" },
-            { nombre: "Corralón San Lorenzo", zona: "GBA Sur", telefono: "011 4220-2278" },
-            { nombre: "Corralón Villa Brown", zona: "GBA Sur", telefono: "011 6382-0456" },
-            { nombre: "Corralón Don Tino", zona: "GBA Sur", telefono: "011 4267-0542" },
-            { nombre: "Corralón de la Esquina", zona: "GBA Sur", telefono: "011 4227-0478" },
-            { nombre: "Corralón 9 de Julio", zona: "GBA Sur", telefono: "011 4230-0801" },
-            { nombre: "Casa Dany", zona: "GBA Sur", telefono: "011 2318-1386" },
-            { nombre: "El Puma", zona: "GBA Sur", telefono: "011 4264-2445" },
-            { nombre: "El Resero", zona: "GBA Sur", telefono: "011 3838-5600" },
-            { nombre: "Ferretería Rodriguez", zona: "GBA Sur", telefono: "011 2682-5992" },
-            { nombre: "Ferretería 7 Enanitos", zona: "GBA Sur", telefono: "011 5915-5337" },
-            { nombre: "Grupo Canning", zona: "GBA Sur", telefono: "011 4140-8206" },
-            { nombre: "LEMATE", zona: "GBA Sur", telefono: "011 4295-4362" },
-            { nombre: "Los Portugueses", zona: "GBA Sur", telefono: "011 4234-0631" },
-            { nombre: "Materiales Aguilar", zona: "GBA Sur", telefono: "011 4281-1009" },
-            { nombre: "MATERIALES FERRACON", zona: "GBA Sur", telefono: "011 4296-1500" },
-            { nombre: "Marcelo Acosta", zona: "GBA Sur", telefono: "011 4208-3352" },
-            { nombre: "San Eduardo Design", zona: "GBA Sur", telefono: "4264-4848" },
-            { nombre: "Sanitarios Carosio", zona: "GBA Sur", telefono: "011 3885-5384" },
-            { nombre: "Sanitarios Roma", zona: "GBA Sur", telefono: "011 4244-5543" },
-            { nombre: "SUR CORRALON", zona: "GBA Sur", telefono: "011 4243-8669" },
-            { nombre: "Materiales Haedo", zona: "Haedo", telefono: "011 4659-2546" },
-            { nombre: "Corralón de Marco", zona: "Ituzaingó", telefono: "011 4755-7884" },
-            { nombre: "Franco Materiales", zona: "Ituzaingó", telefono: "011 4624-2874" },
-            { nombre: "Construpint La Plata", zona: "La Plata", telefono: "011 15-5859-2975" },
-            { nombre: "Corralón BARABAS", zona: "La Plata", telefono: "011 15-4992-8547" },
-            { nombre: "Corralón Laprida", zona: "La Plata", telefono: "011 15-2300-2589" },
-            { nombre: "Sodimac La Plata", zona: "La Plata", telefono: "011 2046-0338" },
-            { nombre: "Baukraft", zona: "La Plata / Alrededores", telefono: "0221 648-0134" },
-            { nombre: "CASA MOLINARI", zona: "La Plata / Alrededores", telefono: "0221 353-4644" },
-            { nombre: "Corralón El Molino", zona: "La Plata / Alrededores", telefono: "0221 478-1359" },
-            { nombre: "Corralón El Mirador", zona: "La Plata / Alrededores", telefono: "0221 470-3479" },
-            { nombre: "Construnort", zona: "Liniers", telefono: "011 3917-1670" },
-            { nombre: "El Lucero De Luján", zona: "Luján", telefono: "460-1612" },
-            { nombre: "Calera El Super", zona: "Luján / GBA Oeste", telefono: "011 3302-1000" },
-            { nombre: "Casa Roberto", zona: "Luján / GBA Oeste", telefono: "0237 462-7147" }
+            { nombre: "Corralón El Lider 2", zona: "Avellaneda", telefono: "011 3348-3980", direccion: "Av. Nicolas Avellaneda 5768, Virreyes" },
+            { nombre: "Corralón Rossi Chico", zona: "Avellaneda", telefono: "011 3146-8283", direccion: "Av. Avellaneda 4654" },
+            { nombre: "Nuevo Travaglini", zona: "Avellaneda", telefono: "011 4549-2003", direccion: "Av. Avellaneda 2597" },
+            { nombre: "Corralón 2 de Abril", zona: "Belgrano", telefono: "0223 593-8651", direccion: "Ara Gral Belgrano, 2 de Abril 900" },
+            { nombre: "Corralón Belgrano", zona: "Belgrano", telefono: "011 4220-6046", direccion: "Cno. Gral. Belgrano 6030" },
+            { nombre: "Red Sacchi", zona: "Belgrano", telefono: "011 2446-6681", direccion: "Cno. Gral. Belgrano 2103" },
+            { nombre: "Calera El Ombu", zona: "Benavídez", telefono: "0800-220-6628", direccion: "Av. Benavídez 3784" },
+            { nombre: "Hiemar Benavídez", zona: "Benavídez", telefono: "011 2850-0943", direccion: "2745 Avenida Benavídez" },
+            { nombre: "Corralón Las Campanas", zona: "Campana", telefono: "03489 15-57-5959", direccion: "V. Demarco 156" },
+            { nombre: "Materiales Caseros", zona: "Caseros", telefono: "02320 49-1986", direccion: "Av Pte A Illia 11100" },
+            { nombre: "Rosmat Corralón", zona: "Caseros", telefono: "011 4759-9848", direccion: "Ntra Sra de la Merced 5328, Caseros" },
+            { nombre: "Materiales Del Viso", zona: "Del Viso", telefono: "02320 40-0548", direccion: "Av. Pte. Arturo U. Illia 14591" },
+            { nombre: "Casa Guido", zona: "Don Torcuato", telefono: "011 4748-2806", direccion: "Arata 2106, Don Torcuato" },
+            { nombre: "Corralón Arcepi", zona: "Ensenada", telefono: "011 2087-2527", direccion: "Lisandro de la Torre 1200, Ensenada" },
+            { nombre: "Corralón Tra-cor", zona: "Escobar", telefono: "011 6434-7028", direccion: "Colectora Oeste Ramal Escobar km55" },
+            { nombre: "Corralones del Norte", zona: "Escobar", telefono: "0348 464-1700", direccion: "Colectora Oeste Ramal Escobar 1348" },
+            { nombre: "Corralón del Sur", zona: "Florencio Varela", telefono: "011 7513-0086", direccion: "Av. Florencio Varela 1078" },
+            { nombre: "Corralón Florida Norte", zona: "Florida", telefono: "011 6671-2813", direccion: "Gral. José de San Martín 2399, Florida" },
+            { nombre: "Corralón La Florida", zona: "Florida", telefono: "011 4769-1309", direccion: "Gabino Ezeiza 8869, Florida" },
+            { nombre: "Abelson", zona: "GBA Norte", telefono: "011 4584-9400", direccion: "Av. Gaona 3334" },
+            { nombre: "Allmat Materiales", zona: "GBA Norte", telefono: "011 3816-6431", direccion: "Av. Brig. Gral. Juan Manuel de Rosas 15908" },
+            { nombre: "Andersen Materiales", zona: "GBA Norte", telefono: "0800-888-6161", direccion: "Ruta 197" },
+            { nombre: "Apolo Materiales", zona: "GBA Norte", telefono: "011 4442-0393", direccion: "Av. Monseñor Bufano 6919" },
+            { nombre: "Aurora Materiales", zona: "GBA Norte", telefono: "011 4641-3428", direccion: "Arregui 6066" },
+            { nombre: "Benamat Corralon", zona: "GBA Norte", telefono: "011 2634-9206", direccion: "Av. Gral. Juan Domingo Perón 8488" },
+            { nombre: "CASA ANAYAN", zona: "GBA Norte", telefono: "011 2529-3839", direccion: "Av Gral Roca 3042" },
+            { nombre: "CASA FUSCO", zona: "GBA Norte", telefono: "02320 42-7555", direccion: "Av. Pres. Hipólito Yrigoyen 3577" },
+            { nombre: "CERÁMICA RÍO GRANDE", zona: "GBA Norte", telefono: "011 5001-6571", direccion: "Av. Brig. Gral. Juan Manuel de Rosas 7515" },
+            { nombre: "CORRALON EL CACIQUE", zona: "GBA Norte", telefono: "011 5596-2840", direccion: "Venezuela 4846" },
+            { nombre: "CORRALON LA BASE", zona: "GBA Norte", telefono: "011 5762-0431", direccion: "Av. Monseñor Bufano 825" },
+            { nombre: "CORRALON RICKY", zona: "GBA Norte", telefono: "011 3099-4899", direccion: "Luis María Campos 2871" },
+            { nombre: "CORRALÓN CASA NANCY", zona: "GBA Norte", telefono: "011 4669-6294", direccion: "Carlos Casares 2165" },
+            { nombre: "CORRALÓN EL TRIÁNGULO", zona: "GBA Norte", telefono: "011 5054-0111", direccion: "Av. Don Bosco 4902" },
+            { nombre: "Calera Larrazabal", zona: "GBA Norte", telefono: "011 6715-9205", direccion: "Av. Larrazábal 4210" },
+            { nombre: "Calera el Puente", zona: "GBA Norte", telefono: "0220 489-3734", direccion: "Av. Pres. Juan Domingo Perón 27173" },
+            { nombre: "Casa Bascioni", zona: "GBA Norte", telefono: "011 4743-3148", direccion: "Formosa 2442, Villa Ballester" },
+            { nombre: "Casa Casares", zona: "GBA Norte", telefono: "011 4626-1038", direccion: "Carlos Casares 5922" },
+            { nombre: "Casa Casmma", zona: "GBA Norte", telefono: "011 4994-8696", direccion: "Carlos Casares 1749" },
+            { nombre: "Casa Falcone", zona: "GBA Norte", telefono: "011 4743-5772", direccion: "Av. Andrés Rolón 934" },
+            { nombre: "Casa Fernandes", zona: "GBA Norte", telefono: "011 2440-4204", direccion: "Carlos Casares 1654" },
+            { nombre: "Casa Pío XII", zona: "GBA Norte", telefono: "0237 462-4514", direccion: "Pío XII 2729" },
+            { nombre: "Casa Santa Rosa", zona: "GBA Norte", telefono: "011 4624-0073", direccion: "Av. Rivadavia 21838" },
+            { nombre: "Casa Scalise", zona: "GBA Norte", telefono: "011 5588-8239", direccion: "Cnel. Brandsen 548" },
+            { nombre: "Cerámica Cregar", zona: "GBA Norte", telefono: "011 4665-2338", direccion: "Acoyte 3246" },
+            { nombre: "Corral-On", zona: "GBA Norte", telefono: "011 2700-6912", direccion: "Francisco N. de Laprida 2930" },
+            { nombre: "Corralon El Sol", zona: "GBA Norte", telefono: "0220 499-8399", direccion: "Av. Dr. Ricardo Balbín 9826" },
+            { nombre: "Corralon Casa Leo", zona: "GBA Norte", telefono: "011 5722-6388", direccion: "RN197 2201" },
+            { nombre: "Corralon Diego", zona: "GBA Norte", telefono: "011 6002-0819", direccion: "José Ignacio Rucci 3802" },
+            { nombre: "Corralon El Economico", zona: "GBA Norte", telefono: "011 4664-1067", direccion: "Dr. René Favaloro 3436" },
+            { nombre: "Corralon Mariano", zona: "GBA Norte", telefono: "011 5249-7820", direccion: "Av Pres. Juan Domingo Perón 3084" },
+            { nombre: "Corralon Rossi EL TUNEL", zona: "GBA Norte", telefono: "011 2248-0809", direccion: "RN197 827" },
+            { nombre: "Corralon Santa Brigida", zona: "GBA Norte", telefono: "011 3632-7522", direccion: "Murillo 242" },
+            { nombre: "Corralon Santa Rosa", zona: "GBA Norte", telefono: "011 2586-6279", direccion: "Sta. Rosa 2542" },
+            { nombre: "Corralon San Cayetano", zona: "GBA Norte", telefono: "011 5261-8790", direccion: "Av. Constituyentes 2168" },
+            { nombre: "Corralón ABCÉ", zona: "GBA Norte", telefono: "011 2421-8345", direccion: "RP27 1621, Benavidez" },
+            { nombre: "Corralón Arielito", zona: "GBA Norte", telefono: "011 5431-9945", direccion: "Mariano Pelliza 3411" },
+            { nombre: "Corralón COCEVI", zona: "GBA Norte", telefono: "011 5433-9066", direccion: "Curupaytí 949" },
+            { nombre: "Corralón Ciudadela", zona: "GBA Norte", telefono: "011 4653-5333", direccion: "Av. Rivadavia 12120, Ciudadela" },
+            { nombre: "Corralón Comaf", zona: "GBA Norte", telefono: "011 4747-8902", direccion: "Av. Andrés Rolón 2365" },
+            { nombre: "Corralón El Atalaya", zona: "GBA Norte", telefono: "011 4625-2012", direccion: "París 1766" },
+            { nombre: "Corralón El Fortín", zona: "GBA Norte", telefono: "02320 47-0560", direccion: "Av. Ing. Eduardo Madero 828" },
+            { nombre: "Corralón El Ombú", zona: "GBA Norte", telefono: "011 5306-2836", direccion: "Aeronautica argentina 2050, Trujui" },
+            { nombre: "Corralón El Pampa", zona: "GBA Norte", telefono: "011 3359-7777", direccion: "Belisario Roldán 2385" },
+            { nombre: "Corralón El Sueño", zona: "GBA Norte", telefono: "011 4769-1073", direccion: "Av. Eva Perón 9626" },
+            { nombre: "Corralón Nueva Era", zona: "GBA Norte", telefono: "011 2552-1979", direccion: "Gral. Pedro Díaz" },
+            { nombre: "Corralón Visconti", zona: "GBA Norte", telefono: "011 5580-8870", direccion: "Av. Pres. Perón 943" },
+            { nombre: "DECORMAT", zona: "GBA Norte", telefono: "011 3234-1423", direccion: "Av Eva Perón 4935" },
+            { nombre: "DURAMAT", zona: "GBA Norte", telefono: "011 2139-0000", direccion: "Av. Monseñor Bufano 1595" },
+            { nombre: "El Prado", zona: "GBA Norte", telefono: "011 2743-9626", direccion: "Av. Pres. Arturo Umberto Illia 12138" },
+            { nombre: "El Triunfo", zona: "GBA Norte", telefono: "011 4766-8950", direccion: "Av. Fondo de la Legua 589" },
+            { nombre: "FUNDACIÓN VIVIENDA DIGNA", zona: "GBA Norte", telefono: "0810-555-7863", direccion: "Loria" },
+            { nombre: "Familia Bercomat", zona: "GBA Norte", telefono: "0800-555-23726", direccion: "Av. Juan Bautista Alberdi 3765" },
+            { nombre: "Los Primos", zona: "GBA Norte", telefono: "011 4457-2383", direccion: "Rocamora 5432" },
+            { nombre: "Maipú Materiales", zona: "GBA Norte", telefono: "011 4660-2737", direccion: "Av. Pres. Juan Domingo Perón 2418" },
+            { nombre: "Materiales 2003", zona: "GBA Norte", telefono: "011 7183-2003", direccion: "Av. Gaona 3399" },
+            { nombre: "Materiales Dorrego", zona: "GBA Norte", telefono: "0220 482-7316", direccion: "Dorrego 398" },
+            { nombre: "Materiales Leloir", zona: "GBA Norte", telefono: "011 4621-1467", direccion: "Martín Fierro 4361" },
+            { nombre: "Materiales Nuciari", zona: "GBA Norte", telefono: "011 5263-9596", direccion: "Av. Bartolomé Mitre 918" },
+            { nombre: "Nueva Casa Benavidez", zona: "GBA Norte", telefono: "0800-220-2272", direccion: "Av. Agustín M. García 11965" },
+            { nombre: "Pignataro", zona: "GBA Norte", telefono: "011 4740-5177", direccion: "Av. Hipólito Yrigoyen 2195" },
+            { nombre: "Proyectar Materiales", zona: "GBA Norte", telefono: "011 2120-8444", direccion: "Av. Don Bosco 5307" },
+            { nombre: "San Luis Materiales", zona: "GBA Norte", telefono: "011 4844-3675", direccion: "Blas Parera 789" },
+            { nombre: "Calera Ferrari", zona: "GBA Oeste", telefono: "011 15-6622-1636", direccion: "Av. Doctor Ricardo Balbín 7694" },
+            { nombre: "MATERIALES OESTE", zona: "GBA Oeste", telefono: "011 2506-8910", direccion: "Maure 3475" },
+            { nombre: "Maxi Corralon", zona: "GBA Oeste", telefono: "011 2277-1609", direccion: "Av. de la Unión" },
+            { nombre: "Zingtech", zona: "GBA Oeste", telefono: "011 6815-3517", direccion: "Mariano Santamaría 3302" },
+            { nombre: "Aliceri", zona: "GBA Sur", telefono: "011 2477-4270", direccion: "Avenida Escalada 2353" },
+            { nombre: "Armando", zona: "GBA Sur", telefono: "0800-333-6734", direccion: "Mariano Castex 1230" },
+            { nombre: "CORRALON BRILL", zona: "GBA Sur", telefono: "011 4992-8550", direccion: "Av. 21 5848" },
+            { nombre: "CORRALON 222", zona: "GBA Sur", telefono: "011 4295-1205", direccion: "Reconquista 654" },
+            { nombre: "CORRALÓN AMENEDO", zona: "GBA Sur", telefono: "011 4294-7414", direccion: "Amenedo 2954" },
+            { nombre: "Casa Avenida", zona: "GBA Sur", telefono: "011 4283-0906", direccion: "Av. Sta. Fe 731" },
+            { nombre: "Cerámica Echeverria", zona: "GBA Sur", telefono: "011 4693-2800", direccion: "Cam. de Cintura 5437" },
+            { nombre: "Corralon Aquino", zona: "GBA Sur", telefono: "011 2805-7762", direccion: "Oliver 1033" },
+            { nombre: "Corralon Arco Iris", zona: "GBA Sur", telefono: "011 4220-7061", direccion: "B1825" },
+            { nombre: "Corralon El Amanecer", zona: "GBA Sur", telefono: "011 3141-9018", direccion: "" },
+            { nombre: "Corralon Espora", zona: "GBA Sur", telefono: "011 2444-5879", direccion: "Blvd. Tomás Espora 8091" },
+            { nombre: "Corralon Kennedy", zona: "GBA Sur", telefono: "02229 44-0685", direccion: "C. 131 5779, Hudson" },
+            { nombre: "Corralon Las Palmas", zona: "GBA Sur", telefono: "011 6990-2962", direccion: "Gral. Brig. Juan Manuel de Rosas" },
+            { nombre: "Corralon Los Hermanos", zona: "GBA Sur", telefono: "011 4244-5301", direccion: "Tarija 1576" },
+            { nombre: "Corralon Martinto", zona: "GBA Sur", telefono: "011 5660-5860", direccion: "Domingo Martinto 1626" },
+            { nombre: "Corralon Megamat", zona: "GBA Sur", telefono: "011 15-7027-5677", direccion: "Av. Pedro Suárez 757" },
+            { nombre: "Corralon Rodriguez", zona: "GBA Sur", telefono: "011 4298-4214", direccion: "Antonio Sastre 325" },
+            { nombre: "Corralon Santa Clara", zona: "GBA Sur", telefono: "011 2685-6451", direccion: "Av. República de Francia 1925" },
+            { nombre: "Corralon Santoro", zona: "GBA Sur", telefono: "011 4216-0929", direccion: "Av. Valentín Vergara 1180" },
+            { nombre: "Corralón 80", zona: "GBA Sur", telefono: "011 3750-0824", direccion: "Av. 21 3152" },
+            { nombre: "Corralón Acomar", zona: "GBA Sur", telefono: "011 2564-4252", direccion: "Av. Crisólogo Larralde 5235" },
+            { nombre: "Corralón Cepeda", zona: "GBA Sur", telefono: "011 4278-1718", direccion: "Marcelo Torcuato de Alvear 3283" },
+            { nombre: "Corralón El Clásico", zona: "GBA Sur", telefono: "011 4998-2423", direccion: "Av. Hipólito Yrigoyen 22447" },
+            { nombre: "Corralón El Gauchito", zona: "GBA Sur", telefono: "011 4398-1445", direccion: "Los Cedros 974" },
+            { nombre: "Corralón El Vasco", zona: "GBA Sur", telefono: "011 4238-3552", direccion: "Blvd. Tomás Espora 4090" },
+            { nombre: "Corralón Leo", zona: "GBA Sur", telefono: "011 4223-4682", direccion: "C. 142 3088" },
+            { nombre: "Corralón Los 4 Hermanos", zona: "GBA Sur", telefono: "011 4249-2932", direccion: "Salta 665" },
+            { nombre: "Corralón San Lorenzo", zona: "GBA Sur", telefono: "011 4220-2278", direccion: "Eva Perón 3047" },
+            { nombre: "Corralón Villa Brown", zona: "GBA Sur", telefono: "011 6382-0456", direccion: "Av. Eva Perón 8033" },
+            { nombre: "Corralón Don Tino", zona: "GBA Sur", telefono: "011 4267-0542", direccion: "José León Suárez 1840" },
+            { nombre: "Corralón de la Esquina", zona: "GBA Sur", telefono: "011 4227-0478", direccion: "Av. Crisólogo Larralde 3402" },
+            { nombre: "Corralón 9 de Julio", zona: "GBA Sur", telefono: "011 4230-0801", direccion: "Av. 9 de Julio 4137" },
+            { nombre: "Casa Dany", zona: "GBA Sur", telefono: "011 2318-1386", direccion: "25 de Mayo 638" },
+            { nombre: "El Puma", zona: "GBA Sur", telefono: "011 4264-2445", direccion: "Villa Barcelo 51" },
+            { nombre: "El Resero", zona: "GBA Sur", telefono: "011 3838-5600", direccion: "Teniente Gral. Luis Dellepiane 4000" },
+            { nombre: "Ferretería Rodriguez", zona: "GBA Sur", telefono: "011 2682-5992", direccion: "25 de Mayo 923" },
+            { nombre: "Ferretería 7 Enanitos", zona: "GBA Sur", telefono: "011 5915-5337", direccion: "Miguel Cane 372" },
+            { nombre: "Grupo Canning", zona: "GBA Sur", telefono: "011 4140-8206", direccion: "Mariano Castex 3869" },
+            { nombre: "LEMATE", zona: "GBA Sur", telefono: "011 4295-4362", direccion: "Lucio Salvadores 80" },
+            { nombre: "Los Portugueses", zona: "GBA Sur", telefono: "011 4234-0631", direccion: "Pres. Néstor Kirchner 5270" },
+            { nombre: "Materiales Aguilar", zona: "GBA Sur", telefono: "011 4281-1009", direccion: "Gral. Madariaga 166" },
+            { nombre: "MATERIALES FERRACON", zona: "GBA Sur", telefono: "011 4296-1500", direccion: "Nuestras Malvinas 1400, Glew" },
+            { nombre: "Marcelo Acosta", zona: "GBA Sur", telefono: "011 4208-3352", direccion: "Av. Sta. Fe 2273" },
+            { nombre: "San Eduardo Design", zona: "GBA Sur", telefono: "4264-4848", direccion: "Dr. Carlos Collivadino 57" },
+            { nombre: "Sanitarios Carosio", zona: "GBA Sur", telefono: "011 3885-5384", direccion: "Av. Roca 1000" },
+            { nombre: "Sanitarios Roma", zona: "GBA Sur", telefono: "011 4244-5543", direccion: "Av. Almte. Brown 2302" },
+            { nombre: "SUR CORRALON", zona: "GBA Sur", telefono: "011 4243-8669", direccion: "24 de Mayo 771" },
+            { nombre: "Materiales Haedo", zona: "Haedo", telefono: "011 4659-2546", direccion: "Gral. Juan Martín de Pueyrredón 962, Haedo" },
+            { nombre: "Corralón de Marco", zona: "Ituzaingó", telefono: "011 4755-7884", direccion: "Ituzaingó 1650" },
+            { nombre: "Franco Materiales", zona: "Ituzaingó", telefono: "011 4624-2874", direccion: "Calle José María Paz 106, Ituzaingó" },
+            { nombre: "Construpint La Plata", zona: "La Plata", telefono: "011 15-5859-2975", direccion: "Avenida 7 548, La Plata" },
+            { nombre: "Corralón BARABAS", zona: "La Plata", telefono: "011 15-4992-8547", direccion: "Av. La Plata 461" },
+            { nombre: "Corralón Laprida", zona: "La Plata", telefono: "011 15-2300-2589", direccion: "Av. La Plata 3091" },
+            { nombre: "Sodimac La Plata", zona: "La Plata", telefono: "011 2046-0338", direccion: "Camino General Belgrano, La Plata" },
+            { nombre: "Baukraft", zona: "La Plata / Alrededores", telefono: "0221 648-0134", direccion: "Avenida 520 1595" },
+            { nombre: "CASA MOLINARI", zona: "La Plata / Alrededores", telefono: "0221 353-4644", direccion: "C. 80 165" },
+            { nombre: "Corralón El Molino", zona: "La Plata / Alrededores", telefono: "0221 478-1359", direccion: "Av. 520" },
+            { nombre: "Corralón El Mirador", zona: "La Plata / Alrededores", telefono: "0221 470-3479", direccion: "Av. 32 2441" },
+            { nombre: "Construnort", zona: "Liniers", telefono: "011 3917-1670", direccion: "Avenida Liniers 2680" },
+            { nombre: "El Lucero De Luján", zona: "Luján", telefono: "460-1612", direccion: "Luján" },
+            { nombre: "Calera El Super", zona: "Luján / GBA Oeste", telefono: "011 3302-1000", direccion: "Luján / GBA Oeste" },
+            { nombre: "Casa Roberto", zona: "Luján / GBA Oeste", telefono: "0237 462-7147", direccion: "Gral. Martín Miguel de Güemes 1270" }
         ];
 
         let zonas = ["Todos"];
@@ -337,9 +370,9 @@
             render();
         }
 
-        function guardar(id) {
-            if (!contactados.includes(id)) {
-                contactados.push(id);
+        function guardar(index) {
+            if (!contactados.includes(index)) {
+                contactados.push(index);
                 localStorage.setItem('contactados', JSON.stringify(contactados));
             }
             render();
@@ -365,44 +398,82 @@
             if (digits.length === 13 && !digits.startsWith('549')) {
                 digits = '549' + digits.substring(2);
             }
-            if (digits.length === 14 && digits.startsWith('5499')) {
-                // Already correct
-            }
             return digits;
         }
 
-        function contactar(index) {
+        function contactarWhatsApp(index) {
             const c = corralones[index];
             guardar(index);
-            
             const tel = formatearTel(c.telefono);
             const texto = encodeURIComponent('Hola! Los contacto por un tema de materiales para construcción.');
             window.location.href = `https://wa.me/${tel}?text=${texto}`;
         }
 
+        function llamar(index) {
+            const c = corralones[index];
+            guardar(index);
+            const tel = formatearTel(c.telefono);
+            window.location.href = `tel:${tel}`;
+        }
+
+        function abrirMaps(direccion) {
+            if (!direccion) return;
+            const encoded = encodeURIComponent(direccion + ', Argentina');
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encoded}`, '_blank');
+        }
+
         function render() {
-            const filtrosEl = document.getElementById('filtros');
-            filtrosEl.innerHTML = zonas.map(z => 
-                `<button class="filtro-btn ${z === zonaActual ? 'active' : ''}" onclick="zonaActual='${z}';render()">${z}</button>`
-            ).join('');
+            const filtroEl = document.getElementById('filtroZona');
+            if (filtroEl.options.length === 1) {
+                zonas.forEach(z => {
+                    const opt = document.createElement('option');
+                    opt.value = z;
+                    opt.textContent = z;
+                    filtroEl.appendChild(opt);
+                });
+                filtroEl.value = zonaActual;
+                filtroEl.addEventListener('change', (e) => {
+                    zonaActual = e.target.value;
+                    render();
+                });
+            }
 
             const filtrados = zonaActual === "Todos" ? corralones : corralones.filter(c => c.zona === zonaActual);
             
             const statsEl = document.getElementById('stats');
-            const contactadosEnFiltro = filtrados.filter((_, i) => contactados.includes(i)).length;
-            statsEl.innerHTML = `Contactados: ${contactados.length} de ${corralones.length}`;
+            const contactadosEnFiltro = filtrados.filter((_, i) => {
+                const index = corralones.indexOf(_);
+                return contactados.includes(index);
+            }).length;
+            statsEl.innerHTML = `Contactados: <span>${contactados.length}</span> de <span>${corralones.length}</span> corralones`;
 
             const listaEl = document.getElementById('lista');
-            listaEl.innerHTML = filtrados.map((c, i) => {
+            listaEl.innerHTML = filtrados.map((c, pos) => {
                 const index = corralones.indexOf(c);
                 const esContactado = contactados.includes(index);
+                
                 return `
                 <div class="card ${esContactado ? 'contactado' : ''}">
                     <div class="nombre">${c.nombre}</div>
                     <div class="zona">📍 ${c.zona}</div>
-                    <a class="boton" href="#" onclick="contactar(${index});return false;">
-                        💬 Contactar por WhatsApp
-                    </a>
+                    
+                    ${c.direccion ? `
+                    <div class="direccion">
+                        <a href="#" onclick="abrirMaps('${c.direccion.replace(/'/g, "\\'")}');return false;">
+                            📌 ${c.direccion}
+                        </a>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="botones">
+                        <a class="boton boton-whatsapp" href="#" onclick="contactarWhatsApp(${index});return false;">
+                            💬 WhatsApp
+                        </a>
+                        <a class="boton boton-llamar" href="#" onclick="llamar(${index});return false;">
+                            📞 Llamar
+                        </a>
+                    </div>
+                    
                     ${esContactado ? '<div class="badge-contactado">✓ Contactado</div>' : ''}
                 </div>
                 `;
