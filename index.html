@@ -58,11 +58,6 @@
             background-size: 20px;
         }
 
-        .filtro-select:focus {
-            outline: none;
-            border-color: #25D366;
-        }
-
         .stats {
             padding: 15px;
             background: #e8f5e9;
@@ -70,6 +65,13 @@
             font-size: 1.1rem;
             color: #2e7d32;
             font-weight: bold;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
         }
 
         .lista {
@@ -88,7 +90,10 @@
 
         .card.contactado {
             background: #e8f5e9;
-            border: 3px solid #4caf50;
+        }
+
+        .card.llamado {
+            border-left: 5px solid #1976d2;
         }
 
         .nombre {
@@ -137,7 +142,7 @@
             display: block;
             padding: 18px 12px;
             border-radius: 12px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: bold;
             text-decoration: none;
             text-align: center;
@@ -167,15 +172,52 @@
             transform: scale(0.98);
         }
 
-        .badge-contactado {
-            display: block;
-            background: #4caf50;
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
+        .badges {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 12px 18px;
+            border-radius: 25px;
             font-size: 1rem;
-            margin-top: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            border: 3px solid transparent;
+        }
+
+        .badge:active {
+            transform: scale(0.95);
+        }
+
+        .badge-whatsapp {
+            background: #f5f5f5;
+            color: #666;
+            border-color: #ddd;
+        }
+
+        .badge-whatsapp.active {
+            background: #25D366;
+            color: white;
+            border-color: #25D366;
+        }
+
+        .badge-llamar {
+            background: #f5f5f5;
+            color: #666;
+            border-color: #ddd;
+        }
+
+        .badge-llamar.active {
+            background: #1976d2;
+            color: white;
+            border-color: #1976d2;
         }
 
         .reset-btn {
@@ -205,7 +247,7 @@
 
     <div class="stats" id="stats"></div>
     <div class="lista" id="lista"></div>
-    <button class="reset-btn" onclick="resetAll()">🔄 Reiniciar contactos</button>
+    <button class="reset-btn" onclick="resetAll()">🔄 Reiniciar todo</button>
 
     <script>
         const corralones = [
@@ -361,27 +403,38 @@
 
         let zonas = ["Todos"];
         let zonaActual = "Todos";
-        let contactados = [];
+        // Estados: { whatsapp: true/false, llamado: true/false }
+        let estados = {};
 
         function init() {
             zonas = ["Todos", ...new Set(corralones.map(c => c.zona))];
-            const guardados = localStorage.getItem('contactados');
-            if (guardados) contactados = JSON.parse(guardados);
+            const guardados = localStorage.getItem('estados');
+            if (guardados) estados = JSON.parse(guardados);
             render();
         }
 
-        function guardar(index) {
-            if (!contactados.includes(index)) {
-                contactados.push(index);
-                localStorage.setItem('contactados', JSON.stringify(contactados));
-            }
+        function guardar() {
+            localStorage.setItem('estados', JSON.stringify(estados));
+        }
+
+        function toggleWhatsApp(index) {
+            if (!estados[index]) estados[index] = {};
+            estados[index].whatsapp = !estados[index].whatsapp;
+            guardar();
+            render();
+        }
+
+        function toggleLlamar(index) {
+            if (!estados[index]) estados[index] = {};
+            estados[index].llamado = !estados[index].llamado;
+            guardar();
             render();
         }
 
         function resetAll() {
             if (confirm('¿Reiniciar todos los contactos?')) {
-                contactados = [];
-                localStorage.removeItem('contactados');
+                estados = {};
+                localStorage.removeItem('estados');
                 render();
             }
         }
@@ -403,7 +456,9 @@
 
         function contactarWhatsApp(index) {
             const c = corralones[index];
-            guardar(index);
+            if (!estados[index]) estados[index] = {};
+            estados[index].whatsapp = true;
+            guardar();
             const tel = formatearTel(c.telefono);
             const texto = encodeURIComponent('Hola! Los contacto por un tema de materiales para construcción.');
             window.location.href = `https://wa.me/${tel}?text=${texto}`;
@@ -411,7 +466,9 @@
 
         function llamar(index) {
             const c = corralones[index];
-            guardar(index);
+            if (!estados[index]) estados[index] = {};
+            estados[index].llamado = true;
+            guardar();
             const tel = formatearTel(c.telefono);
             window.location.href = `tel:${tel}`;
         }
@@ -440,20 +497,31 @@
 
             const filtrados = zonaActual === "Todos" ? corralones : corralones.filter(c => c.zona === zonaActual);
             
+            // Contar estados
+            let totalWhatsapp = 0;
+            let totalLlamado = 0;
+            Object.keys(estados).forEach(k => {
+                if (estados[k].whatsapp) totalWhatsapp++;
+                if (estados[k].llamado) totalLlamado++;
+            });
+            
             const statsEl = document.getElementById('stats');
-            const contactadosEnFiltro = filtrados.filter((_, i) => {
-                const index = corralones.indexOf(_);
-                return contactados.includes(index);
-            }).length;
-            statsEl.innerHTML = `Contactados: <span>${contactados.length}</span> de <span>${corralones.length}</span> corralones`;
+            statsEl.innerHTML = `
+                <div class="stats-row">
+                    <span>💬 Contactados: <span>${totalWhatsapp}</span></span>
+                    <span>📞 Llamados: <span>${totalLlamado}</span></span>
+                    <span>📍 Total: <span>${corralones.length}</span></span>
+                </div>
+            `;
 
             const listaEl = document.getElementById('lista');
             listaEl.innerHTML = filtrados.map((c, pos) => {
                 const index = corralones.indexOf(c);
-                const esContactado = contactados.includes(index);
+                const estado = estados[index] || {};
+                const cardClass = (estado.whatsapp || estado.llamado) ? 'card' : 'card';
                 
                 return `
-                <div class="card ${esContactado ? 'contactado' : ''}">
+                <div class="${cardClass}">
                     <div class="nombre">${c.nombre}</div>
                     <div class="zona">📍 ${c.zona}</div>
                     
@@ -474,7 +542,14 @@
                         </a>
                     </div>
                     
-                    ${esContactado ? '<div class="badge-contactado">✓ Contactado</div>' : ''}
+                    <div class="badges">
+                        <div class="badge badge-whatsapp ${estado.whatsapp ? 'active' : ''}" onclick="toggleWhatsApp(${index})">
+                            ${estado.whatsapp ? '✓ ' : ''}💬 WhatsApp
+                        </div>
+                        <div class="badge badge-llamar ${estado.llamado ? 'active' : ''}" onclick="toggleLlamar(${index})">
+                            ${estado.llamado ? '✓ ' : ''}📞 Llamado
+                        </div>
+                    </div>
                 </div>
                 `;
             }).join('');
