@@ -570,24 +570,17 @@
             // Solo números
             let digits = tel.replace(/\D/g, '');
             
-            // Ejemplo: 011 3348-3980 -> 1133483980
-            // Para WhatsApp Argentina: 5491133483980 (54 + 9 + 1133483980)
+            // wa.me funciona con 549 + número (sin 0 inicial)
+            // Ejemplo: 011 3348-3980 -> 5491133483980
+            // Ejemplo: 011 15-3348-3980 -> 549111533483980 (el 15 queda en el medio)
             
-            // Si empieza con 11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,34,35,36,37,38,39 -> es celular
-            // Solo celulares necesitan el 9
-            // patrón: código área (2-4 dígitos) + número (6-8 dígitos)
-            
-            // Para wa.me siempre: 54 + 9 + todo el resto de dígitos
-            // Primero sacamos el 0 inicial si existe
+            // Sacar el 0 inicial
             if (digits.startsWith('0')) {
                 digits = digits.substring(1);
             }
             
-            // Ahora digits es como 1133483980 (celular) o 2349891234 (fijo)
-            // Agregamos 549 al inicio
-            digits = '549' + digits;
-            
-            return digits;
+            // Para wa.me siempre: 549 + el resto
+            return '549' + digits;
         }
 
         function contactarWhatsApp(index) {
