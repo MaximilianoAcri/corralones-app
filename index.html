@@ -252,23 +252,6 @@
             border-color: #1976d2;
         }
 
-        .siguiente-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 120px;
-            background: #ff9800;
-            color: white;
-            border: none;
-            border-radius: 30px;
-            padding: 20px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.5);
-            z-index: 100;
-        }
-
         .reset-btn {
             position: fixed;
             bottom: 20px;
@@ -321,10 +304,6 @@
     <div class="stats" id="stats"></div>
     <div class="lista" id="lista"></div>
 
-    <button class="siguiente-btn" id="btnSiguiente" onclick="irSiguiente()">
-        ▶️ Siguiente pendiente
-    </button>
-    
     <button class="reset-btn" onclick="resetAll()" title="Reiniciar">↺</button>
 
     <script>
@@ -553,34 +532,6 @@
             render();
         }
 
-        function irSiguiente() {
-            const pendientes = getPendientes();
-            if (pendientes.length === 0) {
-                alert('¡Felicidades! Ya contactaste a todos.');
-                return;
-            }
-            
-            // Encontrar el primer pendiente
-            const primero = pendientes[0];
-            const elemento = document.querySelector(`[data-index="${primero}"]`);
-            if (elemento) {
-                elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                elemento.style.backgroundColor = '#fff3cd';
-                setTimeout(() => elemento.style.backgroundColor = '', 1000);
-            }
-        }
-
-        function getPendientes() {
-            let pendientes = [];
-            corralones.forEach((c, i) => {
-                const e = estados[i] || {};
-                if (!e.whatsapp && !e.llamado) {
-                    pendientes.push(i);
-                }
-            });
-            return pendientes;
-        }
-
         function resetAll() {
             if (confirm('¿Reiniciar todos los contactos?')) {
                 estados = {};
@@ -663,12 +614,6 @@
             document.getElementById('progreso-fill').style.width = `${porcentaje}%`;
             document.getElementById('progreso-fill').textContent = `${porcentaje}%`;
 
-            // Stats
-            const pendientes = getPendientes().filter(i => {
-                if (zonaActual !== "Todos") return corralones[i].zona === zonaActual;
-                return true;
-            });
-            
             document.getElementById('stats').innerHTML = `
                 <strong>${filtrados.length} corralones</strong> en esta zona
             `;
