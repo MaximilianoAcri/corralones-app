@@ -566,21 +566,21 @@
             }
         }
 
+        function esMovil(tel) {
+            // Solo números móviles tienen WhatsApp
+            // En Argentina, los móviles tienen "15" después del código de área
+            const digits = tel.replace(/\D/g, '');
+            return digits.includes('15');
+        }
+
         function formatearTel(tel) {
-            // Solo números
             let digits = tel.replace(/\D/g, '');
-            
-            // wa.me funciona con 549 + número (sin 0 inicial)
-            // Ejemplo: 011 3348-3980 -> 5491133483980
-            // Ejemplo: 011 15-3348-3980 -> 549111533483980 (el 15 queda en el medio)
-            
             // Sacar el 0 inicial
             if (digits.startsWith('0')) {
                 digits = digits.substring(1);
             }
-            
-            // Para wa.me siempre: 549 + el resto
-            return '549' + digits;
+            // 549 + número (sin 0)
+            return '54' + digits;
         }
 
         function contactarWhatsApp(index) {
@@ -669,6 +669,7 @@
             listaEl.innerHTML = filtrados.map(({ c, i }) => {
                 const estado = estados[i] || {};
                 const esFavorito = estado.favorito;
+                const esTelMovil = esMovil(c.telefono);
                 
                 return `
                 <div class="card ${(estado.whatsapp || estado.llamado) ? 'contactado' : ''} ${esFavorito ? 'favorito' : ''}" data-index="${i}">
@@ -689,18 +690,22 @@
                     ` : ''}
                     
                     <div class="botones">
+                        ${esTelMovil ? `
                         <a class="boton boton-whatsapp" href="#" onclick="contactarWhatsApp(${i});return false;">
                             💬 WhatsApp
                         </a>
+                        ` : ''}
                         <a class="boton boton-llamar" href="#" onclick="llamar(${i});return false;">
                             📞 Llamar
                         </a>
                     </div>
                     
                     <div class="badges">
+                        ${esTelMovil ? `
                         <div class="badge badge-whatsapp ${estado.whatsapp ? 'active' : ''}" onclick="toggleWhatsApp(${i})">
                             ${estado.whatsapp ? '✓ ' : ''}💬 WhatsApp
                         </div>
+                        ` : ''}
                         <div class="badge badge-llamar ${estado.llamado ? 'active' : ''}" onclick="toggleLlamar(${i})">
                             ${estado.llamado ? '✓ ' : ''}📞 Llamado
                         </div>
