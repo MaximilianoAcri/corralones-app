@@ -84,7 +84,26 @@
         }
 
         .filtro-checkbox {
-            display: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 15px;
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .filtro-checkbox input {
+            width: 20px;
+            height: 20px;
+        }
+
+        .filtro-checkbox.active {
+            background: #ff9800;
+            color: white;
         }
 
         .stats {
@@ -299,6 +318,11 @@
         <select class="filtro-select" id="filtroZona">
             <option value="Todos">Todas las zonas</option>
         </select>
+        
+        <label class="filtro-checkbox" id="soloPendientesLabel">
+            <input type="checkbox" id="soloPendientes">
+            <span>🔔 Solo sin contactar</span>
+        </label>
     </div>
 
     <div class="stats" id="stats"></div>
@@ -498,12 +522,14 @@
 
         let zonas = ["Todos"];
         let zonaActual = "Todos";
+        let soloPendientes = false;
         let estados = {};
 
         function init() {
             zonas = ["Todos", ...new Set(corralones.map(c => c.zona))];
             const guardados = localStorage.getItem('estados');
             if (guardados) estados = JSON.parse(guardados);
+            soloPendientes = localStorage.getItem('soloPendientes') === 'true';
             render();
         }
 
@@ -596,23 +622,29 @@
             }
             filtroEl.value = zonaActual;
 
+            const soloPendientesEl = document.getElementById('soloPendientes');
+            const soloPendientesLabel = document.getElementById('soloPendientesLabel');
+            soloPendientesEl.checked = soloPendientes;
+            if (soloPendientes) soloPendientesLabel.classList.add('active');
+            else soloPendientesLabel.classList.remove('active');
+            soloPendientesEl.addEventListener('change', (e) => {
+                soloPendientes = e.target.checked;
+                localStorage.setItem('soloPendientes', soloPendientes);
+                render();
+            });
+
             let filtrados = corralones.map((c, i) => ({ c, i }));
             
             if (zonaActual !== "Todos") {
                 filtrados = filtrados.filter(x => x.c.zona === zonaActual);
             }
-
-            // Progreso
-            const total = corralones.length;
-            let contactados = 0;
-            Object.keys(estados).forEach(k => {
-                if (estados[k].whatsapp || estados[k].llamado) contactados++;
-            });
-            const porcentaje = Math.round((contactados / total) * 100);
             
-            document.getElementById('progreso-numero').textContent = `${contactados} de ${total}`;
-            document.getElementById('progreso-fill').style.width = `${porcentaje}%`;
-            document.getElementById('progreso-fill').textContent = `${porcentaje}%`;
+            if (soloPendientes) {
+                filtrados = filtrados.filter(x => {
+                    const e = estados[x.i] || {};
+                    return !e.whatsapp && !e.llamado;
+                });
+            }
 
             document.getElementById('stats').innerHTML = `
                 <strong>${filtrados.length} corralones</strong> en esta zona
