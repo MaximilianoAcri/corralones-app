@@ -568,16 +568,25 @@
 
         function formatearTel(tel) {
             let digits = tel.replace(/\D/g, '');
-            if (digits.startsWith('0')) digits = '54' + digits.substring(1);
-            if (digits.startsWith('15') && digits.length === 11) {
-                digits = '54' + '9' + digits;
+            
+            // Si empieza con 0 (código de área), sacarlo
+            if (digits.startsWith('0')) {
+                digits = digits.substring(1);
             }
-            if (digits.length === 12 && !digits.startsWith('549')) {
-                digits = '54' + digits.substring(1);
+            
+            // Si no empieza con 54 (Argentina), agregarlo
+            if (!digits.startsWith('54')) {
+                digits = '54' + digits;
             }
-            if (digits.length === 13 && !digits.startsWith('549')) {
-                digits = '549' + digits.substring(2);
+            
+            // Si tiene 12 dígitos y es celular (11XXXXXXXX), agregar el 9
+            // Argentina: 54 + 9 + código área + número
+            // Fijos: 54 + código área (2-4 dígitos) + número
+            if (digits.length === 12 && digits.startsWith('54')) {
+                // Insertar 9 después del 54: 54XXXXXXXXXX -> 549XXXXXXXXXX
+                digits = '54' + '9' + digits.substring(2);
             }
+            
             return digits;
         }
 
@@ -596,7 +605,8 @@
             if (!estados[index]) estados[index] = {};
             estados[index].llamado = true;
             guardar();
-            const tel = formatearTel(c.telefono);
+            // Para llamada: solo números sin código de país
+            const tel = c.telefono.replace(/\D/g, '');
             window.location.href = `tel:${tel}`;
         }
 
