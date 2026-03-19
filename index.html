@@ -669,7 +669,7 @@
             listaEl.innerHTML = filtrados.map(({ c, i }) => {
                 const estado = estados[i] || {};
                 const esFavorito = estado.favorito;
-                const esTelMovil = esMovil(c.telefono);
+                const tieneTel = c.telefono && c.telefono.trim() !== '';
                 
                 return `
                 <div class="card ${(estado.whatsapp || estado.llamado) ? 'contactado' : ''} ${esFavorito ? 'favorito' : ''}" data-index="${i}">
@@ -689,26 +689,26 @@
                     </div>
                     ` : ''}
                     
+                    ${tieneTel ? `
                     <div class="botones">
-                        ${esTelMovil ? `
                         <a class="boton boton-whatsapp" href="#" onclick="contactarWhatsApp(${i});return false;">
                             💬 WhatsApp
                         </a>
-                        ` : ''}
                         <a class="boton boton-llamar" href="#" onclick="llamar(${i});return false;">
                             📞 Llamar
                         </a>
                     </div>
+                    ` : ''}
                     
                     <div class="badges">
-                        ${esTelMovil ? `
+                        ${tieneTel ? `
                         <div class="badge badge-whatsapp ${estado.whatsapp ? 'active' : ''}" onclick="toggleWhatsApp(${i})">
                             ${estado.whatsapp ? '✓ ' : ''}💬 WhatsApp
                         </div>
-                        ` : ''}
                         <div class="badge badge-llamar ${estado.llamado ? 'active' : ''}" onclick="toggleLlamar(${i})">
                             ${estado.llamado ? '✓ ' : ''}📞 Llamado
                         </div>
+                        ` : '<span style="color:#999">Sin telefono</span>'}
                     </div>
                 </div>
                 `;
